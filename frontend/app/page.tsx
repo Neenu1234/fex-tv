@@ -43,7 +43,7 @@ export default function Home() {
   const recognitionRef = useRef<SpeechRecognition | null>(null)
   const wakeWordRecognitionRef = useRef<SpeechRecognition | null>(null)
   const transcriptRef = useRef<string>('')
-  const wakeWords = ['fex tv', 'flex tv', 'flev tv', 'fex television']
+  const wakeWords = ['hello', 'hey', 'hi']
 
   useEffect(() => {
     // Initialize Web Speech API
@@ -394,7 +394,7 @@ export default function Home() {
                   ? 'bg-gray-700 hover:bg-gray-600'
                   : 'bg-netflix-red hover:bg-red-700'
               }`}
-              title={isWaitingForWakeWord ? "Say 'Fex TV' to activate" : isListening ? 'Stop listening' : 'Click to activate'}
+              title={isWaitingForWakeWord ? "Say 'Hello' to activate" : isListening ? 'Stop listening' : 'Click to activate'}
             >
               {isListening ? '⏹️' : isWaitingForWakeWord ? '👂' : '🎤'}
             </button>
@@ -412,12 +412,12 @@ export default function Home() {
                     {isListening 
                       ? 'Listening... Speak now' 
                       : isWaitingForWakeWord
-                      ? "Say 'Fex TV' to activate (or click microphone)"
-                      : 'Click microphone or say "Fex TV" to start'}
+                      ? "Say 'Hello' to activate (or click microphone)"
+                      : 'Click microphone or say "Hello" to start'}
                   </p>
                   <p className="text-gray-500 text-lg">
                     {isWaitingForWakeWord 
-                      ? '👂 Listening for wake word...' 
+                      ? '👂 Listening for "Hello"...' 
                       : 'Speak your movie or food preference...'}
                   </p>
                 </div>
