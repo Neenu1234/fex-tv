@@ -40,6 +40,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const recognitionRef = useRef<SpeechRecognition | null>(null)
+  const transcriptRef = useRef<string>('')
 
   useEffect(() => {
     // Initialize Web Speech API
@@ -58,10 +59,11 @@ export default function Home() {
         }
 
         recognition.onresult = (event: SpeechRecognitionEvent) => {
-          const transcript = Array.from(event.results)
+          const currentTranscript = Array.from(event.results)
             .map(result => result[0].transcript)
             .join('')
-          setTranscript(transcript)
+          setTranscript(currentTranscript)
+          transcriptRef.current = currentTranscript
         }
 
         recognition.onerror = (event: any) => {
@@ -73,8 +75,11 @@ export default function Home() {
         recognition.onend = () => {
           setIsListening(false)
           // Auto-process when user finishes speaking
-          if (transcript.trim()) {
-            processVoiceInput(transcript)
+          const finalTranscript = transcriptRef.current.trim()
+          if (finalTranscript) {
+            setTimeout(() => {
+              processVoiceInput(finalTranscript)
+            }, 300) // Small delay to ensure state is updated
           }
         }
 
