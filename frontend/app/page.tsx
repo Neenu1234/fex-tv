@@ -226,34 +226,52 @@ export default function Home() {
 
         recognitionRef.current = recognition
 
-        // Start wake word recognition
+        // Start wake word recognition - requires user interaction first
+        // So we'll start it when user clicks the button or page loads after interaction
         const startWakeWord = () => {
-          try {
-            wakeWordRecognition.start()
-            console.log('Wake word recognition started') // Debug
-          } catch (e) {
-            console.log('Wake word already started or error:', e) // Debug
-            // Already started, ignore
+          if (wakeWordRecognitionRef.current) {
+            try {
+              wakeWordRecognitionRef.current.start()
+              console.log('Wake word recognition started') // Debug
+              setIsWaitingForWakeWord(true)
+            } catch (e: any) {
+              if (e.message && e.message.includes('already started')) {
+                console.log('Wake word already started') // Debug
+              } else {
+                console.log('Wake word start error:', e) // Debug
+                // If it fails, user might need to interact first
+                // We'll start it when they click the button
+              }
+            }
           }
         }
 
-        // Start listening for wake word after a short delay
-        setTimeout(() => {
-          startWakeWord()
-          // Also try to restart if it stops
-          setInterval(() => {
-            if (isWaitingForWakeWord && !isListening) {
-              try {
-                if (wakeWordRecognitionRef.current) {
-                  // Check if it's already running by trying to start
-                  wakeWordRecognitionRef.current.start()
-                }
-              } catch (e) {
-                // Already running, that's fine
-              }
+        // Try to start wake word recognition
+        // Note: Some browsers require user interaction first
+        const tryStartWakeWord = () => {
+          setTimeout(() => {
+            startWakeWord()
+          }, 500)
+        }
+
+        // Start after page load
+        tryStartWakeWord()
+
+        // Also start when user clicks anywhere (for browsers that require interaction)
+        const handleUserInteraction = () => {
+          if (isWaitingForWakeWord && !isListening && wakeWordRecognitionRef.current) {
+            try {
+              wakeWordRecognitionRef.current.start()
+            } catch (e) {
+              // Ignore
             }
-          }, 5000) // Check every 5 seconds
-        }, 1000)
+          }
+          // Remove listener after first interaction
+          document.removeEventListener('click', handleUserInteraction)
+          document.removeEventListener('touchstart', handleUserInteraction)
+        }
+        document.addEventListener('click', handleUserInteraction)
+        document.addEventListener('touchstart', handleUserInteraction)
       } else {
         setError('Speech recognition not supported in this browser')
       }
@@ -281,6 +299,17 @@ export default function Home() {
         // Ignore
       }
     }
+    // Also start wake word recognition in background for next time
+    setTimeout(() => {
+      if (wakeWordRecognitionRef.current && !isListening) {
+        try {
+          wakeWordRecognitionRef.current.start()
+          setIsWaitingForWakeWord(true)
+        } catch (e) {
+          // Ignore
+        }
+      }
+    }, 1000)
     startMainRecognition()
   }
 
