@@ -157,65 +157,73 @@ export default function Home() {
         </nav>
       </header>
 
-      {/* Transcript at Top */}
-      {transcript && (
-        <section className="pt-24 pb-8 px-16">
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-black/70 rounded-lg p-6 border border-gray-800">
-              <p className="text-gray-400 text-sm mb-2">You said:</p>
-              <p className="text-white text-xl font-medium">{transcript}</p>
+      {/* Voice Input Section at Top */}
+      <section className="pt-24 pb-8 px-16">
+        <div className="max-w-6xl mx-auto">
+          <div className="bg-black/70 rounded-lg p-6 border border-gray-800 flex items-center gap-4">
+            {/* Microphone Button - Top Left */}
+            <button
+              onClick={isListening ? stopListening : startListening}
+              className={`w-16 h-16 rounded-full flex items-center justify-center text-3xl transition-all flex-shrink-0 ${
+                isListening
+                  ? 'bg-red-600 animate-pulse'
+                  : 'bg-netflix-red hover:bg-red-700'
+              }`}
+            >
+              {isListening ? '⏹️' : '🎤'}
+            </button>
+
+            {/* Transcript Box */}
+            <div className="flex-1">
+              {transcript ? (
+                <>
+                  <p className="text-gray-400 text-sm mb-2">You said:</p>
+                  <p className="text-white text-xl font-medium">{transcript}</p>
+                </>
+              ) : (
+                <div>
+                  <p className="text-gray-400 text-sm mb-2">
+                    {isListening ? 'Listening... Speak now' : 'Click microphone to start speaking'}
+                  </p>
+                  <p className="text-gray-500 text-lg">Speak your movie or food preference...</p>
+                </div>
+              )}
             </div>
+
+            {/* Status Indicator */}
+            {isListening && (
+              <div className="flex-shrink-0">
+                <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+              </div>
+            )}
+          </div>
+
+          {/* Error Message */}
+          {error && (
+            <div className="mt-4 bg-red-900/50 border border-red-500 rounded-lg p-4">
+              <p className="text-red-200">{error}</p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Hero Section - Welcome Message (only when no transcript) */}
+      {!transcript && !loading && (
+        <section className="relative min-h-[40vh] flex items-center justify-center">
+          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/50 to-transparent z-10"></div>
+          <div className="relative z-20 text-center px-8 max-w-4xl">
+            <h2 className="text-6xl font-black mb-6">Speak Your Movie Preference</h2>
+            <p className="text-xl text-gray-300 mb-8">
+              Tell us what you want to watch, and we'll find the perfect movies for you
+            </p>
           </div>
         </section>
       )}
 
-      {/* Hero Section - Voice Input */}
-      <section className="relative min-h-[60vh] flex items-center justify-center">
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/50 to-transparent z-10"></div>
-        <div className="relative z-20 text-center px-8 max-w-4xl">
-          {!transcript && (
-            <>
-              <h2 className="text-6xl font-black mb-6">Speak Your Movie Preference</h2>
-              <p className="text-xl text-gray-300 mb-8">
-                Tell us what you want to watch, and we'll find the perfect movies for you
-              </p>
-            </>
-          )}
-
-          {/* Voice Input Section */}
-          <div className="bg-black/70 rounded-lg p-8">
-            <div className="flex flex-col items-center gap-6">
-              {/* Voice Button */}
-              <button
-                onClick={isListening ? stopListening : startListening}
-                className={`w-24 h-24 rounded-full flex items-center justify-center text-4xl transition-all ${
-                  isListening
-                    ? 'bg-red-600 animate-pulse'
-                    : 'bg-netflix-red hover:bg-red-700'
-                }`}
-              >
-                {isListening ? '⏹️' : '🎤'}
-              </button>
-
-              <p className="text-gray-400">
-                {isListening ? 'Listening... Speak now' : transcript ? 'Click to search again' : 'Click to start speaking'}
-              </p>
-
-              {/* Error Message */}
-              {error && (
-                <div className="w-full bg-red-900/50 border border-red-500 rounded-lg p-4">
-                  <p className="text-red-200">{error}</p>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Recommendations Section - Movies */}
       {resultType === 'movies' && recommendations.length > 0 && (
-        <section className="px-16 py-12 min-h-[50vh] flex flex-col justify-center">
-          <h3 className="text-3xl font-bold mb-8 text-center">Recommended Movies</h3>
+        <section className="px-16 py-8">
+          <h3 className="text-3xl font-bold mb-8">Recommended Movies</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
             {recommendations.map((movie) => (
               <div
@@ -248,8 +256,8 @@ export default function Home() {
 
       {/* Recommendations Section - Restaurants */}
       {resultType === 'food' && restaurants.length > 0 && (
-        <section className="px-16 py-12 min-h-[50vh] flex flex-col justify-center">
-          <h3 className="text-3xl font-bold mb-8 text-center">🍽️ Nearby Restaurants for Your TV Dinner</h3>
+        <section className="px-16 py-8">
+          <h3 className="text-3xl font-bold mb-8">🍽️ Nearby Restaurants for Your TV Dinner</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
             {restaurants.map((restaurant) => (
               <div
