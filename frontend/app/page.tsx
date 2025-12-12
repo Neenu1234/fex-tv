@@ -68,10 +68,35 @@ export default function Home() {
             currentTranscript.includes(wakeWord)
           )
           
-          if (detectedWakeWord && !isListening) {
+          if (detectedWakeWord) {
             // Wake word detected, start main recognition
             wakeWordRecognition.stop()
-            startMainRecognition()
+            // Extract query after wake word
+            let queryAfterWakeWord = currentTranscript
+            for (const wakeWord of wakeWords) {
+              const index = currentTranscript.indexOf(wakeWord)
+              if (index !== -1) {
+                queryAfterWakeWord = currentTranscript.substring(index + wakeWord.length).trim()
+                break
+              }
+            }
+            // Start main recognition
+            if (recognitionRef.current) {
+              setTranscript('')
+              setRecommendations([])
+              setRestaurants([])
+              setResultType(null)
+              setError('')
+              setIsWaitingForWakeWord(false)
+              recognitionRef.current.start()
+              // If there's text after wake word, set it
+              if (queryAfterWakeWord) {
+                setTimeout(() => {
+                  setTranscript(queryAfterWakeWord)
+                  transcriptRef.current = queryAfterWakeWord
+                }, 100)
+              }
+            }
           }
         }
 
