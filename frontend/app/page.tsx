@@ -84,15 +84,15 @@ export default function Home() {
 
         wakeWordRecognition.onend = () => {
           // Restart wake word recognition if we're waiting for wake word
-          if (isWaitingForWakeWord && !isListening) {
-            setTimeout(() => {
+          setTimeout(() => {
+            if (!isListening) {
               try {
                 wakeWordRecognition.start()
               } catch (e) {
                 // Already started, ignore
               }
-            }, 100)
-          }
+            }
+          }, 100)
         }
 
         wakeWordRecognitionRef.current = wakeWordRecognition
@@ -141,15 +141,17 @@ export default function Home() {
               processVoiceInput(finalTranscript)
             }, 300)
           }
-          // Restart wake word recognition
-          setIsWaitingForWakeWord(true)
+          // Restart wake word recognition after a delay
           setTimeout(() => {
-            try {
-              wakeWordRecognition.start()
-            } catch (e) {
-              // Already started, ignore
+            setIsWaitingForWakeWord(true)
+            if (wakeWordRecognitionRef.current) {
+              try {
+                wakeWordRecognitionRef.current.start()
+              } catch (e) {
+                // Already started, ignore
+              }
             }
-          }, 500)
+          }, 1000)
         }
 
         recognitionRef.current = recognition
