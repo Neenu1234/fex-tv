@@ -6,9 +6,11 @@ A conversational AI-powered platform that recommends movies and restaurants base
 
 ## 🎥 Demo Video
 
-**👉 [Watch Demo Video Here](#)** *(Add your demo video link)*
+**👉 [Watch Demo Video](demo-video.mov)** *(Click to download and watch)*
 
-[![Demo Video](https://img.shields.io/badge/▶️-Watch%20Demo-red)](https://your-demo-video-link.com)
+[![Demo Video](https://img.shields.io/badge/▶️-Watch%20Demo-red)](demo-video.mov)
+
+> **Note**: The demo video shows the complete workflow of Fex TV, including voice input, movie recommendations, and food search features.
 
 ---
 
