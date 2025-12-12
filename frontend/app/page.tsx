@@ -63,47 +63,92 @@ export default function Home() {
             .join('')
             .toLowerCase()
           
-          // Check for wake word
-          const detectedWakeWord = wakeWords.some(wakeWord => 
-            currentTranscript.includes(wakeWord)
-          )
+          console.log('Wake word listening:', currentTranscript) // Debug
           
-          if (detectedWakeWord) {
+          // Check for wake word - more flexible matching
+          let detectedWakeWord = false
+          let matchedWakeWord = ''
+          
+          for (const wakeWord of wakeWords) {
+            // Check if wake word appears in transcript
+            if (currentTranscript.includes(wakeWord)) {
+              detectedWakeWord = true
+              matchedWakeWord = wakeWord
+              break
+            }
+            // Also check for variations (e.g., "fex tv" vs "fex t v")
+            const wakeWordVariations = [
+              wakeWord,
+              wakeWord.replace(' ', ''),
+              wakeWord.replace(' ', ' t '),
+              wakeWord + ' ',
+              ' ' + wakeWord
+            ]
+            if (wakeWordVariations.some(variation => currentTranscript.includes(variation))) {
+              detectedWakeWord = true
+              matchedWakeWord = wakeWord
+              break
+            }
+          }
+          
+          if (detectedWakeWord && !isListening) {
+            console.log('Wake word detected:', matchedWakeWord) // Debug
             // Wake word detected, start main recognition
-            wakeWordRecognition.stop()
+            try {
+              wakeWordRecognition.stop()
+            } catch (e) {
+              // Ignore
+            }
+            
             // Extract query after wake word
             let queryAfterWakeWord = currentTranscript
-            for (const wakeWord of wakeWords) {
-              const index = currentTranscript.indexOf(wakeWord)
-              if (index !== -1) {
-                queryAfterWakeWord = currentTranscript.substring(index + wakeWord.length).trim()
-                break
-              }
+            const index = currentTranscript.indexOf(matchedWakeWord)
+            if (index !== -1) {
+              queryAfterWakeWord = currentTranscript.substring(index + matchedWakeWord.length).trim()
             }
+            
             // Start main recognition
-            if (recognitionRef.current) {
-              setTranscript('')
-              setRecommendations([])
-              setRestaurants([])
-              setResultType(null)
-              setError('')
-              setIsWaitingForWakeWord(false)
-              recognitionRef.current.start()
-              // If there's text after wake word, set it
-              if (queryAfterWakeWord) {
-                setTimeout(() => {
-                  setTranscript(queryAfterWakeWord)
-                  transcriptRef.current = queryAfterWakeWord
-                }, 100)
+            setTimeout(() => {
+              if (recognitionRef.current) {
+                setTranscript('')
+                setRecommendations([])
+                setRestaurants([])
+                setResultType(null)
+                setError('')
+                setIsWaitingForWakeWord(false)
+                try {
+                  recognitionRef.current.start()
+                  // If there's text after wake word, set it
+                  if (queryAfterWakeWord) {
+                    setTimeout(() => {
+                      setTranscript(queryAfterWakeWord)
+                      transcriptRef.current = queryAfterWakeWord
+                    }, 200)
+                  }
+                } catch (e) {
+                  console.error('Error starting recognition:', e)
+                }
               }
-            }
+            }, 200)
           }
         }
 
         wakeWordRecognition.onerror = (event: any) => {
-          // Ignore errors for wake word recognition, just restart
-          if (event.error !== 'no-speech') {
-            console.error('Wake word recognition error:', event.error)
+          // Ignore 'no-speech' errors (normal when waiting)
+          if (event.error === 'no-speech') {
+            // This is normal, just continue listening
+            return
+          }
+          console.error('Wake word recognition error:', event.error)
+          // Restart on other errors
+          if (event.error !== 'aborted' && !isListening) {
+            setTimeout(() => {
+              try {
+                wakeWordRecognition.start()
+              } catch (e) {
+                // Ignore
+              }
+            }, 1000)
           }
         }
 
@@ -185,13 +230,30 @@ export default function Home() {
         const startWakeWord = () => {
           try {
             wakeWordRecognition.start()
+            console.log('Wake word recognition started') // Debug
           } catch (e) {
+            console.log('Wake word already started or error:', e) // Debug
             // Already started, ignore
           }
         }
 
-        // Start listening for wake word
-        setTimeout(startWakeWord, 1000)
+        // Start listening for wake word after a short delay
+        setTimeout(() => {
+          startWakeWord()
+          // Also try to restart if it stops
+          setInterval(() => {
+            if (isWaitingForWakeWord && !isListening) {
+              try {
+                if (wakeWordRecognitionRef.current) {
+                  // Check if it's already running by trying to start
+                  wakeWordRecognitionRef.current.start()
+                }
+              } catch (e) {
+                // Already running, that's fine
+              }
+            }
+          }, 5000) // Check every 5 seconds
+        }, 1000)
       } else {
         setError('Speech recognition not supported in this browser')
       }
@@ -321,12 +383,12 @@ export default function Home() {
                     {isListening 
                       ? 'Listening... Speak now' 
                       : isWaitingForWakeWord
-                      ? "Say 'Fex TV' to activate"
+                      ? "Say 'Fex TV' to activate (or click microphone)"
                       : 'Click microphone or say "Fex TV" to start'}
                   </p>
                   <p className="text-gray-500 text-lg">
                     {isWaitingForWakeWord 
-                      ? 'Waiting for wake word...' 
+                      ? '👂 Listening for wake word...' 
                       : 'Speak your movie or food preference...'}
                   </p>
                 </div>
