@@ -42,3 +42,8 @@ logs/
 
 # Test files
 test_api.py
+
+# Large video files (use YouTube/GitHub Releases instead)
+*.mov
+*.mp4
+!demo-video.mov
