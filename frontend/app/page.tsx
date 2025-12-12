@@ -72,6 +72,10 @@ export default function Home() {
 
         recognition.onend = () => {
           setIsListening(false)
+          // Auto-process when user finishes speaking
+          if (transcript.trim()) {
+            processVoiceInput(transcript)
+          }
         }
 
         recognitionRef.current = recognition
@@ -85,6 +89,9 @@ export default function Home() {
     if (recognitionRef.current) {
       setTranscript('')
       setRecommendations([])
+      setRestaurants([])
+      setResultType(null)
+      setError('')
       recognitionRef.current.start()
     }
   }
@@ -95,8 +102,9 @@ export default function Home() {
     }
   }
 
-  const processVoiceInput = async () => {
-    if (!transcript.trim()) {
+  const processVoiceInput = async (textToProcess?: string) => {
+    const text = textToProcess || transcript
+    if (!text.trim()) {
       setError('Please speak your movie preference first')
       return
     }
@@ -106,7 +114,7 @@ export default function Home() {
 
     try {
       const response = await axios.post(`${API_BASE}/api/voice/process`, {
-        text: transcript,
+        text: text,
       })
 
       if (response.data.success) {
@@ -144,17 +152,33 @@ export default function Home() {
         </nav>
       </header>
 
-      {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center">
+      {/* Transcript at Top */}
+      {transcript && (
+        <section className="pt-24 pb-8 px-16">
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-black/70 rounded-lg p-6 border border-gray-800">
+              <p className="text-gray-400 text-sm mb-2">You said:</p>
+              <p className="text-white text-xl font-medium">{transcript}</p>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Hero Section - Voice Input */}
+      <section className="relative min-h-[60vh] flex items-center justify-center">
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/50 to-transparent z-10"></div>
         <div className="relative z-20 text-center px-8 max-w-4xl">
-          <h2 className="text-6xl font-black mb-6">Speak Your Movie Preference</h2>
-          <p className="text-xl text-gray-300 mb-8">
-            Tell us what you want to watch, and we'll find the perfect movies for you
-          </p>
+          {!transcript && (
+            <>
+              <h2 className="text-6xl font-black mb-6">Speak Your Movie Preference</h2>
+              <p className="text-xl text-gray-300 mb-8">
+                Tell us what you want to watch, and we'll find the perfect movies for you
+              </p>
+            </>
+          )}
 
           {/* Voice Input Section */}
-          <div className="bg-black/70 rounded-lg p-8 mb-8">
+          <div className="bg-black/70 rounded-lg p-8">
             <div className="flex flex-col items-center gap-6">
               {/* Voice Button */}
               <button
@@ -169,26 +193,8 @@ export default function Home() {
               </button>
 
               <p className="text-gray-400">
-                {isListening ? 'Listening... Speak now' : 'Click to start speaking'}
+                {isListening ? 'Listening... Speak now' : transcript ? 'Click to search again' : 'Click to start speaking'}
               </p>
-
-              {/* Transcript */}
-              {transcript && (
-                <div className="w-full bg-gray-900 rounded-lg p-4">
-                  <p className="text-white text-lg">{transcript}</p>
-                </div>
-              )}
-
-              {/* Process Button */}
-              {transcript && !isListening && (
-                <button
-                  onClick={processVoiceInput}
-                  disabled={loading}
-                  className="px-8 py-3 bg-netflix-red hover:bg-red-700 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {loading ? 'Processing...' : 'Get Recommendations'}
-                </button>
-              )}
 
               {/* Error Message */}
               {error && (
@@ -203,8 +209,8 @@ export default function Home() {
 
       {/* Recommendations Section - Movies */}
       {resultType === 'movies' && recommendations.length > 0 && (
-        <section className="px-16 py-12">
-          <h3 className="text-3xl font-bold mb-8">Recommended Movies</h3>
+        <section className="px-16 py-12 min-h-[50vh] flex flex-col justify-center">
+          <h3 className="text-3xl font-bold mb-8 text-center">Recommended Movies</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
             {recommendations.map((movie) => (
               <div
@@ -237,8 +243,8 @@ export default function Home() {
 
       {/* Recommendations Section - Restaurants */}
       {resultType === 'food' && restaurants.length > 0 && (
-        <section className="px-16 py-12">
-          <h3 className="text-3xl font-bold mb-8">🍽️ Nearby Restaurants for Your TV Dinner</h3>
+        <section className="px-16 py-12 min-h-[50vh] flex flex-col justify-center">
+          <h3 className="text-3xl font-bold mb-8 text-center">🍽️ Nearby Restaurants for Your TV Dinner</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
             {restaurants.map((restaurant) => (
               <div
