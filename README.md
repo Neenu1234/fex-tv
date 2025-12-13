@@ -6,11 +6,61 @@ A conversational AI-powered platform that recommends movies and restaurants base
 
 ## 🎥 Demo Video
 
-**👉 [Watch Demo Video](demo-video.mov)** *(Click to download and watch)*
+Watch the complete demo of Fex TV in action! The video showcases voice input, movie recommendations, food search, and the Netflix-style UI.
 
-[![Demo Video](https://img.shields.io/badge/▶️-Watch%20Demo-red)](demo-video.mov)
+<div align="center">
 
-> **Note**: The demo video shows the complete workflow of Fex TV, including voice input, movie recommendations, and food search features.
+[![Fex TV Demo Video](https://img.youtube.com/vi/YOUR_VIDEO_ID/maxresdefault.jpg)](https://www.youtube.com/watch?v=YOUR_VIDEO_ID)
+
+**👉 [Watch on YouTube](https://www.youtube.com/watch?v=YOUR_VIDEO_ID)** | [Download Video](demo-video.mov)
+
+</div>
+
+> **Note**: Replace `YOUR_VIDEO_ID` with your actual YouTube video ID after uploading. To get the video ID, upload your video to YouTube and copy the ID from the URL (e.g., `youtube.com/watch?v=VIDEO_ID`).
+
+**How to upload to YouTube (Free):**
+1. Go to [YouTube.com](https://www.youtube.com) and sign in
+2. Click the camera icon (Create) → Upload video
+3. Select `demo-video.mov` from your Desktop
+4. Add title: "Fex TV - Voice-Powered Movie & Food Recommendation System"
+5. Set visibility (Unlisted recommended for demo videos)
+6. Once uploaded, copy the video ID from the URL
+7. Replace `YOUR_VIDEO_ID` in the README with your actual video ID
+
+---
+
+## 💼 Business Goal
+
+Fex TV aims to revolutionize the home entertainment experience by creating a unified, voice-powered platform that seamlessly integrates content discovery and food ordering. Our primary business objectives are:
+
+### 🎯 Primary Objectives
+
+1. **Unified Entertainment Ecosystem**: Create a single platform where users can discover movies/shows and order food without switching between multiple apps or services, enhancing the "TV dinner night" experience.
+
+2. **Voice-First User Experience**: Eliminate the friction of typing and searching by enabling natural voice commands, making content discovery and food ordering as simple as having a conversation.
+
+3. **Revenue Generation Opportunities**:
+   - **Commission-Based Model**: Partner with food delivery services (DoorDash, Uber Eats, Grubhub) to earn commissions on orders placed through the platform
+   - **Affiliate Marketing**: Earn revenue through affiliate links to streaming services (Netflix, Hulu, Prime Video) when users click to watch recommended content
+   - **Premium Subscriptions**: Offer advanced features like personalized recommendations, ad-free experience, and priority support
+   - **Restaurant Partnerships**: Charge restaurants for featured placements and promotional opportunities
+
+4. **Data-Driven Personalization**: Build a comprehensive understanding of user preferences for both entertainment and dining, enabling highly targeted recommendations that increase user engagement and order frequency.
+
+5. **Market Differentiation**: Position Fex TV as the first platform to combine entertainment discovery with food ordering in a voice-powered, TV-optimized interface, targeting the growing smart TV and streaming device market.
+
+### 📈 Target Market
+
+- **Primary**: Tech-savvy millennials and Gen Z who value convenience and voice-activated technology
+- **Secondary**: Families looking for an all-in-one solution for movie nights and meal planning
+- **Tertiary**: Smart TV manufacturers and streaming device users seeking integrated entertainment solutions
+
+### 🚀 Growth Strategy
+
+- **Phase 1**: Establish product-market fit with core voice recommendation features
+- **Phase 2**: Integrate food ordering and payment processing to create a complete transaction platform
+- **Phase 3**: Expand to smart TV apps and mobile platforms to increase market reach
+- **Phase 4**: Build partnerships with streaming services and food delivery platforms for revenue sharing
 
 ---
 
@@ -161,34 +211,6 @@ fex-tv/
 ├── README.md                # This file
 └── QUICKSTART.md            # Quick start guide
 ```
-
----
-
-## 🎓 Key Features for Resume
-
-### System Design
-- ✅ Microservices architecture (Frontend/Backend separation)
-- ✅ RESTful API design
-- ✅ Real-time voice processing
-- ✅ Intelligent intent extraction
-
-### AI/ML Integration
-- ✅ Natural Language Understanding
-- ✅ Pattern recognition and classification
-- ✅ Multi-criteria recommendation engine
-- ✅ Context-aware search
-
-### Full-Stack Development
-- ✅ Modern frontend (Next.js, TypeScript)
-- ✅ High-performance backend (FastAPI)
-- ✅ API integration (TMDB, Yelp)
-- ✅ Responsive UI/UX design
-
-### Production-Ready
-- ✅ Error handling and logging
-- ✅ Environment configuration
-- ✅ CORS and security
-- ✅ Scalable architecture
 
 ---
 
