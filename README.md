@@ -8,24 +8,7 @@ A conversational AI-powered platform that recommends movies and restaurants base
 
 Watch the complete demo of Fex TV in action! The video showcases voice input, movie recommendations, food search, and the Netflix-style UI.
 
-<div align="center">
-
-[![Fex TV Demo Video](https://img.youtube.com/vi/YOUR_VIDEO_ID/maxresdefault.jpg)](https://www.youtube.com/watch?v=YOUR_VIDEO_ID)
-
-**👉 [Watch on YouTube](https://www.youtube.com/watch?v=YOUR_VIDEO_ID)** | [Download Video](demo-video.mov)
-
-</div>
-
-> **Note**: Replace `YOUR_VIDEO_ID` with your actual YouTube video ID after uploading. To get the video ID, upload your video to YouTube and copy the ID from the URL (e.g., `youtube.com/watch?v=VIDEO_ID`).
-
-**How to upload to YouTube (Free):**
-1. Go to [YouTube.com](https://www.youtube.com) and sign in
-2. Click the camera icon (Create) → Upload video
-3. Select `demo-video.mov` from your Desktop
-4. Add title: "Fex TV - Voice-Powered Movie & Food Recommendation System"
-5. Set visibility (Unlisted recommended for demo videos)
-6. Once uploaded, copy the video ID from the URL
-7. Replace `YOUR_VIDEO_ID` in the README with your actual video ID
+**👉 [Download Demo Video](demo-video.mov)**
 
 ---
 
